@@ -1,6 +1,6 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-exports.handler = async function (event, context) {
+export async function handler(event, context) {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -19,7 +19,13 @@ exports.handler = async function (event, context) {
     }
 
     const HUGGINGFACE_TOKEN = process.env.HUGGINGFACE_TOKEN;
-    console.log("🧪 Hugging Face Token (length):", HUGGINGFACE_TOKEN?.length);
+
+    if (!HUGGINGFACE_TOKEN) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Hugging Face token missing." }),
+      };
+    }
 
     const response = await fetch("https://api-inference.huggingface.co/models/google/pegasus-xsum", {
       method: "POST",
@@ -31,7 +37,6 @@ exports.handler = async function (event, context) {
     });
 
     const result = await response.json();
-    console.log("🧪 HF Response:", result);
 
     const summary = Array.isArray(result)
       ? result[0]?.summary_text
@@ -55,4 +60,4 @@ exports.handler = async function (event, context) {
       body: JSON.stringify({ error: "Internal server error." }),
     };
   }
-};
+}
