@@ -50,7 +50,7 @@ export async function handler(event, context) {
     }
 
     return {
-      statusCode: 200,
+      statusCode: 5000,
       body: JSON.stringify({ summary }),
     };
   } catch (err) {
