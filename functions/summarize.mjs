@@ -44,7 +44,7 @@ export async function handler(event, context) {
 
     if (!summary) {
       return {
-        statusCode: 2111,
+        statusCode: 500,
         body: JSON.stringify({ error: result?.error || "No summary returned." }),
       };
     }
